@@ -1,0 +1,32 @@
+
+type Query {
+    instrumento: [Instrumento]
+    instrumentoPorCodigo(codigo: Int!): Instrumento
+}
+
+type Mutation {
+    addInstrumento(input: InstrumentoINput!): Instrumento
+    delInstrumento (input: Int!): Instrumento
+    editInstrumento (input: InstrumentoINput!): Instrumento
+
+}
+
+
+input InstrumentoINput {
+    id: ID!
+    nombre: String!
+    precio: Float!
+    fechaVenta : String!
+    numeroCuerdas: Int!
+    numeroTrastes: Int!
+}
+
+type Instrumento {
+    id: ID
+    nombre: String
+    precio: Float
+    fechaVenta : String
+    numeroCuerdas: Int
+    numeroTrastes: Int
+}
+

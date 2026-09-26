@@ -1,0 +1,241 @@
+# ProyectoDiseño
+
+Aplicación distribuida para gestionar instrumentos de cuerda mediante servicios web GraphQL.
+
+El proyecto está dividido en dos componentes:
+
+- **Servidor:** Spring Boot y Java 17. Expone la lógica central y administra los instrumentos en memoria.
+- **Cliente:** Windows Forms en C# sobre .NET Framework 4.8.1. Consume el servidor GraphQL.
+
+## Estructura
+
+```text
+ProyectoDiseño/
+├── POCInstrumentosMusicales/
+│   └── POCInstrumentosMusicales/
+│       ├── pom.xml
+│       └── src/
+│           ├── main/java/          # Aplicación, modelo, servicio y controlador
+│           └── main/resources/
+│               └── graphql/        # Esquema GraphQL
+└── POCInstrumentoCuerda/
+    └── POCInstrumentoCuerda/
+        ├── POCInstrumentoCuerda.slnx
+        └── POCInstrumentoCuerda/
+            ├── POCInstrumentoCuerda.csproj
+            ├── GraphQLService.cs   # Comunicación con el servidor
+            ├── model/              # Modelos del cliente
+            └── GUI*.cs              # Ventanas Windows Forms
+```
+
+## Requisitos
+
+### Servidor
+
+- Java 17 o superior.
+- Maven Wrapper incluido en el proyecto (`mvnw.cmd`).
+- Acceso a Internet la primera vez que Maven descargue dependencias.
+
+### Cliente
+
+- Visual Studio 2019 o superior.
+- Carga de trabajo **Desarrollo de escritorio .NET**.
+- .NET Framework 4.8.1 Developer Pack.
+- Windows Forms.
+
+El cliente utiliza las dependencias GraphQL ubicadas en la carpeta `packages`.
+
+## Ejecutar el servidor
+
+Abrir PowerShell en:
+
+```powershell
+cd "C:\Users\danie\Downloads\ProyectoDiseño\POCInstrumentosMusicales\POCInstrumentosMusicales"
+```
+
+Iniciar Spring Boot:
+
+```powershell
+.\mvnw.cmd spring-boot:run
+```
+
+El servidor queda disponible en:
+
+```text
+http://localhost:8081/graphql
+```
+
+También se puede consultar la interfaz GraphiQL, si está habilitada, en:
+
+```text
+http://localhost:8081/graphiql
+```
+
+No cerrar la terminal mientras se utiliza el cliente.
+
+## Ejecutar el cliente
+
+Abrir en Visual Studio la solución:
+
+```text
+POCInstrumentoCuerda\POCInstrumentoCuerda\POCInstrumentoCuerda.slnx
+```
+
+Si la solución no se abre correctamente, cargar directamente:
+
+```text
+POCInstrumentoCuerda\POCInstrumentoCuerda\POCInstrumentoCuerda\POCInstrumentoCuerda.csproj
+```
+
+Después:
+
+1. Seleccionar el proyecto `POCInstrumentoCuerda`.
+2. Elegir **Establecer como proyecto de inicio**.
+3. Seleccionar `Debug` y `Any CPU`.
+4. Ejecutar **Compilar > Recompilar solución**.
+5. Presionar `F5`.
+
+El ejecutable se genera en:
+
+```text
+POCInstrumentoCuerda\POCInstrumentoCuerda\POCInstrumentoCuerda\bin\Debug\POCInstrumentoCuerda.exe
+```
+
+El servidor Java debe estar iniciado antes de ejecutar operaciones desde el cliente.
+
+## Funcionalidades del cliente
+
+La ventana principal contiene el menú de navegación y las siguientes operaciones:
+
+- **Adicionar instrumento:** registra un instrumento con ID, nombre, precio, fecha de venta, número de cuerdas y número de trastes.
+- **Consultar instrumento:** busca un único instrumento por ID y muestra todos sus atributos.
+- **Listar instrumentos:** obtiene todos los instrumentos y los presenta en una grilla.
+- **Filtrar listado:** permite filtrar por nombre y precio máximo.
+- **Actualizar instrumento:** primero busca el instrumento por ID, muestra sus datos y luego permite modificar sus atributos.
+- **Eliminar instrumento:** primero busca el instrumento por ID, muestra todos sus datos y solicita confirmación antes de eliminarlo.
+- **Acerca de:** muestra los integrantes y la versión de la aplicación.
+
+Cada caso de uso se implementa en una ventana independiente.
+
+## Contrato GraphQL actual
+
+El esquema del servidor se encuentra en:
+
+```text
+POCInstrumentosMusicales/POCInstrumentosMusicales/src/main/resources/graphql/schema.graphqls
+```
+
+El tipo `Instrumento` contiene:
+
+| Campo | Tipo |
+|---|---|
+| `id` | `ID` |
+| `nombre` | `String` |
+| `precio` | `Float` |
+| `fechaVenta` | `String` |
+| `numeroCuerdas` | `Int` |
+| `numeroTrastes` | `Int` |
+
+Operaciones disponibles:
+
+```graphql
+query {
+  instrumento {
+    id
+    nombre
+    precio
+    fechaVenta
+    numeroCuerdas
+    numeroTrastes
+  }
+}
+```
+
+```graphql
+query {
+  instrumentoPorCodigo(codigo: 222) {
+    id
+    nombre
+    precio
+    fechaVenta
+    numeroCuerdas
+    numeroTrastes
+  }
+}
+```
+
+```graphql
+mutation {
+  addInstrumento(input: {
+    id: 222
+    nombre: "Guitarra"
+    precio: 1500
+    fechaVenta: "2026-09-26"
+    numeroCuerdas: 6
+    numeroTrastes: 20
+  }) {
+    id
+    nombre
+  }
+}
+```
+
+Las mutaciones implementadas son:
+
+- `addInstrumento`
+- `delInstrumento`
+- `editInstrumento`
+
+## Prueba manual recomendada
+
+1. Iniciar el servidor Java.
+2. Abrir el cliente .NET.
+3. Adicionar un instrumento válido, por ejemplo:
+   - ID: `222`
+   - Nombre: `Guitarra acústica`
+   - Precio: `1500`
+   - Número de cuerdas: `6`
+   - Número de trastes: `20`
+4. Consultarlo por ID.
+5. Listarlo desde la grilla.
+6. Probar los filtros de nombre y precio.
+7. Buscarlo desde Actualizar y modificar el nombre o precio.
+8. Buscarlo desde Eliminar, revisar todos los datos y confirmar.
+
+## Solución de problemas
+
+### No se puede conectar con GraphQL
+
+Verificar que el servidor esté ejecutándose y que responda en:
+
+```text
+http://localhost:8081/graphql
+```
+
+El puerto utilizado por el cliente está configurado en `GraphQLService.cs`.
+
+### Error relacionado con `.NET Framework 4.6.1`
+
+El proyecto debe utilizar `.NET Framework 4.8.1`. En las propiedades del proyecto, revisar el framework de destino y recompilar.
+
+### Error de `GraphQLHttpClient` o `System.Text.Json`
+
+Revisar que el proyecto esté apuntando a `.NET Framework 4.8.1` y que las referencias de la carpeta `packages` estén restauradas.
+
+### El ejecutable está siendo utilizado por otro proceso
+
+Detener la depuración con el botón rojo de Visual Studio y volver a compilar. También se puede cerrar cualquier instancia abierta de `POCInstrumentoCuerda.exe` desde el Administrador de tareas.
+
+### El ID aparece como texto
+
+GraphQL serializa los campos de tipo `ID` como texto. El cliente ya contempla esta conversión para las operaciones de consulta, actualización y eliminación.
+
+## Observación sobre los filtros
+
+La interfaz del cliente tiene filtros por nombre y precio máximo. Sin embargo, el esquema GraphQL actual define `instrumento` sin argumentos de filtro, por lo que el filtrado se realiza después de obtener la lista.
+
+Para cumplir estrictamente la rúbrica que exige filtrado del lado del servidor, el servidor Java debe agregar argumentos de filtrado al esquema y procesarlos en `ServicioInstrumento`. Esa modificación queda fuera del alcance de este cliente.
+
+## Alcance de este trabajo
+
+Este componente implementa únicamente la parte cliente en C#/.NET. El servidor Java, su colección en memoria y sus servicios GraphQL pertenecen al proyecto `POCInstrumentosMusicales`.
