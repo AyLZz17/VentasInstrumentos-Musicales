@@ -230,12 +230,10 @@ Detener la depuración con el botón rojo de Visual Studio y volver a compilar. 
 
 GraphQL serializa los campos de tipo `ID` como texto. El cliente ya contempla esta conversión para las operaciones de consulta, actualización y eliminación.
 
-## Observación sobre los filtros
+## Filtrado en el servidor
 
-La interfaz del cliente tiene filtros por nombre y precio máximo. Sin embargo, el esquema GraphQL actual define `instrumento` sin argumentos de filtro, por lo que el filtrado se realiza después de obtener la lista.
-
-Para cumplir estrictamente la rúbrica que exige filtrado del lado del servidor, el servidor Java debe agregar argumentos de filtrado al esquema y procesarlos en `ServicioInstrumento`. Esa modificación queda fuera del alcance de este cliente.
+La operación GraphQL `instrumento` recibe los parámetros opcionales `nombre` y `precioMaximo`. El filtrado se ejecuta en `ServicioInstrumento` antes de devolver los resultados al cliente, cumpliendo la rúbrica de filtrado del lado del servidor.
 
 ## Alcance de este trabajo
 
-Este componente implementa únicamente la parte cliente en C#/.NET. El servidor Java, su colección en memoria y sus servicios GraphQL pertenecen al proyecto `POCInstrumentosMusicales`.
+El proyecto contiene un servidor Java con su colección en memoria y servicios GraphQL, además de un cliente C#/.NET que consume esos servicios.

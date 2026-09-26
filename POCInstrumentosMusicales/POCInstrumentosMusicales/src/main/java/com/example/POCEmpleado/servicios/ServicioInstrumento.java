@@ -14,6 +14,14 @@ public class ServicioInstrumento {
         return List.copyOf(instrumentos);
     }
 
+    public static List<Instrumento> listarInstrumentos(String nombre, Double precioMaximo){
+        return instrumentos.stream()
+                .filter(instrumento -> nombre == null || nombre.isBlank()
+                        || instrumento.getNombre().toLowerCase().contains(nombre.toLowerCase()))
+                .filter(instrumento -> precioMaximo == null || instrumento.getPrecio() <= precioMaximo)
+                .toList();
+    }
+
     public static Optional<Instrumento> buscarPorCodigo(int codigo){
         return instrumentos.stream()
                 .filter( e -> e.getId() == codigo)

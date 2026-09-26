@@ -18,13 +18,14 @@ namespace POCInstrumentoCuerda
             return new GraphQLHttpClient(Endpoint, new SystemTextJsonSerializer());
         }
 
-        public static async Task<List<Instrumento>> ListarAsync()
+        public static async Task<List<Instrumento>> ListarAsync(string nombre, double? precioMaximo)
         {
             using (var client = CreateClient())
             {
                 var response = await client.SendQueryAsync<InstrumentoQueryResponse>(new GraphQLRequest
                 {
-                    Query = "query { instrumento { id nombre precio fechaVenta numeroCuerdas numeroTrastes } }"
+                    Query = "query ($nombre: String, $precioMaximo: Float) { instrumento(nombre: $nombre, precioMaximo: $precioMaximo) { id nombre precio fechaVenta numeroCuerdas numeroTrastes } }",
+                    Variables = new { nombre, precioMaximo }
                 });
                 Validate(response.Errors);
                 return response.Data.instrumento ?? new List<Instrumento>();

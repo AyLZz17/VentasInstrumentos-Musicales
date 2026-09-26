@@ -33,13 +33,20 @@ namespace POCInstrumentoCuerda
         {
             try
             {
-                instrumentos = await GraphQLService.ListarAsync();
-                tableInstrumentosCuerda.Rows.Clear();
                 double precioMaximo;
-                bool filtrarPrecio = double.TryParse(filtroPrecioMaximo.Text, out precioMaximo);
-                foreach (var instrumento in instrumentos.Where(item =>
-                    (string.IsNullOrWhiteSpace(filtroNombre.Text) || item.nombre.IndexOf(filtroNombre.Text.Trim(), StringComparison.OrdinalIgnoreCase) >= 0) &&
-                    (!filtrarPrecio || item.precio <= precioMaximo)))
+                double? filtroPrecio = null;
+                if (!string.IsNullOrWhiteSpace(filtroPrecioMaximo.Text))
+                {
+                    if (!double.TryParse(filtroPrecioMaximo.Text, out precioMaximo) || precioMaximo < 0)
+                        throw new ArgumentException("El precio máximo debe ser un número mayor o igual a cero.");
+                    filtroPrecio = precioMaximo;
+                }
+
+                instrumentos = await GraphQLService.ListarAsync(
+                    string.IsNullOrWhiteSpace(filtroNombre.Text) ? null : filtroNombre.Text.Trim(),
+                    filtroPrecio);
+                tableInstrumentosCuerda.Rows.Clear();
+                foreach (var instrumento in instrumentos)
                 {
                     tableInstrumentosCuerda.Rows.Add(instrumento.id, instrumento.nombre, instrumento.precio,
                         instrumento.fechaVenta, instrumento.numeroTrastes, instrumento.numeroCuerdas);

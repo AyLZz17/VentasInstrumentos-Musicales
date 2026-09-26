@@ -1,6 +1,6 @@
 
 type Query {
-    instrumento: [Instrumento]
+    instrumento(nombre: String, precioMaximo: Float): [Instrumento]
     instrumentoPorCodigo(codigo: Int!): Instrumento
 }
 

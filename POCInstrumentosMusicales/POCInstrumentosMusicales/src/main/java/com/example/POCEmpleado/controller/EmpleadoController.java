@@ -15,9 +15,9 @@ import java.util.Optional;
 public class EmpleadoController {
 
     @QueryMapping
-    public List<Instrumento> instrumento(){
+    public List<Instrumento> instrumento(@Argument String nombre, @Argument Double precioMaximo){
 
-        return ServicioInstrumento.listarInstrumentos();
+        return ServicioInstrumento.listarInstrumentos(nombre, precioMaximo);
     }
 
     @QueryMapping
