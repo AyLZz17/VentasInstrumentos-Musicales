@@ -105,8 +105,6 @@ docker compose down
 También puedes iniciar el servidor y el cliente desde PowerShell ejecutando el script desde la raíz del proyecto:
 
 ```powershell
-cd "C:\Users\danie\Downloads\ProyectoDiseño"
-Set-ExecutionPolicy -Scope Process Bypass
 .\start.ps1
 ```
 
