@@ -73,6 +73,52 @@ http://localhost:8081/graphiql
 
 No cerrar la terminal mientras se utiliza el cliente.
 
+## Ejecutar con Docker
+
+Requisitos:
+
+- Docker Desktop iniciado.
+- Docker Compose incluido en Docker Desktop.
+
+Desde la raíz de `ProyectoDiseño`, levantar el servidor en segundo plano:
+
+```powershell
+docker compose up --build -d
+```
+
+El servicio GraphQL quedará disponible en `http://localhost:8081/graphql`. El cliente WinForms puede ejecutarse normalmente desde Visual Studio y continuará usando ese mismo endpoint.
+
+Para ver los logs:
+
+```powershell
+docker compose logs -f instrumentos-server
+```
+
+Para detener el servicio:
+
+```powershell
+docker compose down
+```
+
+## Levantar servidor y cliente juntos
+
+El cliente es Windows Forms, por lo que se ejecuta en Windows fuera del contenedor. Después de compilarlo en Visual Studio, se puede iniciar el servidor Docker y abrir el cliente con un solo comando desde PowerShell:
+
+```powershell
+.\start.ps1
+```
+
+El script ejecuta `docker compose up -d` y abre `POCInstrumentoCuerda.exe` automáticamente.
+
+En Linux, iniciar únicamente el servidor Docker con:
+
+```bash
+chmod +x start.sh
+./start.sh
+```
+
+El servidor GraphQL funciona en Windows y Linux. El cliente actual es Windows Forms sobre .NET Framework, por lo que no puede abrirse como interfaz gráfica nativa en Linux; para usarlo se requiere Windows, una máquina virtual o una solución de escritorio remoto.
+
 ## Ejecutar el cliente
 
 Abrir en Visual Studio la solución:

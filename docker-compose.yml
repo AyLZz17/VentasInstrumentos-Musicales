@@ -1,0 +1,8 @@
+services:
+  instrumentos-server:
+    build:
+      context: ./POCInstrumentosMusicales/POCInstrumentosMusicales
+    container_name: instrumentos-server
+    ports:
+      - "8081:8081"
+    restart: unless-stopped
