@@ -28,13 +28,12 @@ try {
     Write-Host "[+] Construyendo el servidor y descargando dependencias Maven si hacen falta..."
     docker compose up --build -d
 
-    Write-Host "[+] Servidor construido y en ejecución."
+    Write-Host "[+] Servidor construido y en ejecucion."
 
     if (-not (Test-Path $client)) {
-        throw "[x] No se encontró el cliente compilado. Compílalo en Visual Studio antes de ejecutar este script: $client"
+        throw "[x] No se encontro el cliente compilado. Compilalo en Visual Studio antes de ejecutar este script: $client"
     }
     Write-Host "[+] Iniciando cliente WinForms..."
-
     Start-Process -FilePath $client -WorkingDirectory (Split-Path $client)
     Write-Host "[+] Servidor GraphQL: http://localhost:8081/graphql"
     Write-Host "[+] Interfaz para hacer consultas: http://localhost:8081/graphiql"
