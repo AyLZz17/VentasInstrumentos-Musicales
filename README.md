@@ -100,6 +100,31 @@ Para detener el servicio:
 docker compose down
 ```
 
+## Inicio automático con `start.ps1`
+
+También puedes iniciar el servidor y el cliente desde PowerShell ejecutando el script desde la raíz del proyecto:
+
+```powershell
+cd "C:\Users\danie\Downloads\ProyectoDiseño"
+Set-ExecutionPolicy -Scope Process Bypass
+.\start.ps1
+```
+
+El script realiza estas acciones:
+
+- Verifica que Docker esté instalado y disponible en el `PATH`.
+- Si Docker no está instalado, intenta instalar Docker Desktop automáticamente mediante `winget`.
+- Ejecuta `docker compose up --build -d` para reconstruir la imagen cuando sea necesario.
+- Descarga automáticamente las dependencias Maven durante la construcción del servidor.
+- Comprueba que el cliente WinForms esté compilado.
+- Inicia el cliente y abre GraphiQL en `http://localhost:8081/graphiql`.
+
+La primera ejecución puede tardar más porque Docker y Maven deben descargar imágenes y dependencias. Si PowerShell bloquea la ejecución del script, usa `Set-ExecutionPolicy -Scope Process Bypass` como se muestra arriba.
+
+La instalación automática requiere Windows 10/11 con `winget` disponible y puede solicitar permisos de administrador. Si `winget` no está disponible, instala Docker Desktop manualmente y vuelve a ejecutar el script.
+
+No abras directamente `http://localhost:8081/graphql` en el navegador para hacer consultas: esa ruta es el endpoint de la API y espera solicitudes `POST`. Usa GraphiQL para escribir y ejecutar las queries.
+
 ## Levantar servidor y cliente juntos
 
 El cliente es Windows Forms, por lo que se ejecuta en Windows fuera del contenedor. Después de compilarlo en Visual Studio, se puede iniciar el servidor Docker y abrir el cliente con un solo comando desde PowerShell:
